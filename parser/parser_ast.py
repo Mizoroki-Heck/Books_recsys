@@ -20,6 +20,16 @@ def get_soup(url, page=1):
     reg.encoding = 'utf-8'
     return BeautifulSoup(reg.text, "lxml")
 
+def logging(page, filename='progress.log'):
+    with open(filename, 'w') as lg:
+        lg.write(str(page))
+
+def load_progress(filename='progress.log'):
+    if os.path.exists(filename):
+        with open(filename, 'r') as f:
+            return int(f.read().strip())
+    return 1
+
 def get_url_book(url, page=1):
     #получаем список ссылок на книги
     soup = get_soup(url,page)
@@ -42,9 +52,9 @@ def parse_book(link):
 
     title = soup.find('h1').text.strip()
 
-    author = soup.find('a', class_='author-info__name')
+    author = soup.find('a', class_='book-detail__authors-item')
     author = author.get_text(strip=True) if author else "None"
-
+    
     annotation = soup.find('p', style='text-align: justify;')
     annotation = annotation.get_text(strip=True) if annotation else "None"
 
@@ -71,9 +81,10 @@ def parse_book(link):
     }
 
 
-def get_data_books(url, max_pages=5, batch_size=10, filename='books_data'):
+def get_data_books(url, max_pages, batch_size, filename='books_data'):
         book_data = []
-        for page in range(1, max_pages+1):
+        current_page = load_progress()
+        for page in range(current_page, max_pages+1):
             try:
                 print(f'Парсим страницу {page}...')
                 book_links = get_url_book(url, page)
@@ -88,13 +99,14 @@ def get_data_books(url, max_pages=5, batch_size=10, filename='books_data'):
                 results = [r for r in results if r is not None]
                 book_data.extend(results)
 
-                if page % 10 == 0:
-                    print(f'Сохраняем промежуточные данные в файл')
+                if page % batch_size == 0:
+                    print(f'Сохраняем промежуточные данные в файл: страница{page}')
+                    logging(page)
                     save_to_csv(book_data, filename)
                     book_data.clear()
 
             except Exception as e:
-                print(f"Ошибка при обработке книги {page}: {e}")
+                print(f"Ошибка при обработке книги на странице {page}: {e}")
                 print('Продолжаем парсинг')
                 continue
             
@@ -103,9 +115,8 @@ def get_data_books(url, max_pages=5, batch_size=10, filename='books_data'):
             save_to_csv(book_data, filename)
     
 
-
 if __name__ == '__main__':
-    data = get_data_books(url, 2500, batch_size=20)
+    data = get_data_books(url, batch_size = 20, max_pages = 2500)
 
 
 
