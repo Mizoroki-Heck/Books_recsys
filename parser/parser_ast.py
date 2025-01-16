@@ -116,7 +116,7 @@ def get_data_books(url, max_pages, batch_size, filename='books_data'):
     
 
 if __name__ == '__main__':
-    data = get_data_books(url, batch_size = 20, max_pages = 2500)
+    data = get_data_books(url, batch_size = 10, max_pages = 2500)
 
 
 
