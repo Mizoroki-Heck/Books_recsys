@@ -40,9 +40,12 @@ def get_url_book(url, page=1):
     return url_books
 
 def save_to_csv(data, filename='books_data.csv'):
-    file_exists = os.path.exists(filename)
+    os.makedirs('dataset', exist_ok=True)
+    filepath = os.path.join('dataset', filename)
+
+    file_exists = os.path.exists(filepath)
     df = pd.DataFrame(data)
-    df.to_csv(filename, mode='a', header=not file_exists, index=False)
+    df.to_csv(filepath, mode='a', header=not file_exists, index=False)
 
 def parse_book(link):
     reg = requests.get(link)
@@ -79,7 +82,6 @@ def parse_book(link):
         'series': series,
         'book cover': book_cover
     }
-
 
 def get_data_books(url, max_pages, batch_size, filename='books_data'):
         book_data = []

@@ -47,9 +47,12 @@ def get_url_book(url, page=1):
     return url_books
 
 def save_to_csv(data, filename='annotation_data.csv'):
-    file_exists = os.path.exists(filename)
+    os.makedirs('dataset', exist_ok=True)
+    filepath = os.path.join('dataset', filename)
+
+    file_exists = os.path.exists(filepath)
     df = pd.DataFrame(data)
-    df.to_csv(filename, mode='a', header=not file_exists, index=False)
+    df.to_csv(filepath, mode='a', header=not file_exists, index=False)
 
 def parse_book(link):
     try:
@@ -63,15 +66,13 @@ def parse_book(link):
         annotation = soup.find('p', style='text-align: justify;')
         if annotation:
             annotation = annotation.get_text(strip=True)
-            print(annotation)
         else:
             text_div = soup.find('div', class_='text')
             if text_div:
                 annotation = text_div.get_text(separator='\n', strip=True)
-                print(annotation)
             else:
                 annotation = None
-                print('Ниче не нашел')
+                print('Ничего не нашел')
 
         return {
             'Title': title,
@@ -86,7 +87,7 @@ def get_data_books(url, max_pages, batch_size, filename='annotation_data.csv'):
         current_page = load_progress()
         for page in range(current_page, max_pages+1):
             try:
-                print(f'Парсим страницу {page}.../{max_pages}')
+                print(f'Парсим страницу {page}/{max_pages}')
                 book_links = get_url_book(url, page)
                 time.sleep(random.randrange(2, 5))
                 if not book_links:
