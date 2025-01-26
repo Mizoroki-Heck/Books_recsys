@@ -95,7 +95,7 @@ def get_data_books(url, max_pages, batch_size, filename='books_data'):
                     print('Нет данных на этой странице, останавливаемся')
                     break
 
-                with Pool(processes=12) as pool:
+                with Pool(processes=4) as pool:
                     results = pool.map(parse_book, book_links)
 
                 results = [r for r in results if r is not None]

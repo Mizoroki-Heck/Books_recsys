@@ -15,17 +15,17 @@ def get_soup(url, page=1):
         'Referer': 'https://ast.ru/cat/khudozhestvennaya-literatura/',  # Здесь можно указать исходный URL
         'Accept-Language': 'en-US,en;q=0.9,ru;q=0.8',
     }
-    #готовка супа
+
     reg = requests.get(url+f"?PAGEN_1={page}", headers=headers)
     reg.encoding = 'utf-8'
     return BeautifulSoup(reg.text, "lxml")
 
-def get_last_page(url):
-    soup = get_soup(url)
-    last_page = soup.find_all('a', class_='pagination__link')[-2].text
-    return int(last_page)  # Возвращаем число, чтобы его можно было использовать дальше
+# def get_last_page(url):
+#     soup = get_soup(url)
+#     last_page = soup.find_all('a', class_='pagination__link')[-2].text
+#     return int(last_page)  # Возвращаем число, чтобы его можно было использовать дальше
 
-last_page = get_last_page(url)
+# last_page = get_last_page(url)
 
 def logging(page, filename='progress_annotation.log'):
     with open(filename, 'w') as lg:
@@ -63,6 +63,9 @@ def parse_book(link):
 
         title = soup.find('h1').text.strip()
 
+        author = soup.find('a', class_='book-detail__authors-item')
+        author = author.get_text(strip=True) if author else "None"
+
         annotation = soup.find('p', style='text-align: justify;')
         if annotation:
             annotation = annotation.get_text(strip=True)
@@ -72,10 +75,11 @@ def parse_book(link):
                 annotation = text_div.get_text(separator='\n', strip=True)
             else:
                 annotation = None
-                print('Ничего не нашел')
+                print(f'Ничего не нашел{link}')
 
         return {
             'Title': title,
+            'Author': author,
             'Annotation': annotation
         }
     except Exception as e:
@@ -87,21 +91,21 @@ def get_data_books(url, max_pages, batch_size, filename='annotation_data.csv'):
         current_page = load_progress()
         for page in range(current_page, max_pages+1):
             try:
-                print(f'Парсим страницу {page}/{max_pages}')
+                print(f'Парсим страницу {page}/{max_pages+1}')
                 book_links = get_url_book(url, page)
                 time.sleep(random.randrange(2, 5))
                 if not book_links:
                     print('Нет данных на этой странице, останавливаемся')
                     break
 
-                with Pool(processes=12) as pool:
+                with Pool(processes=16) as pool:
                     results = pool.map(parse_book, book_links)
 
                 results = [r for r in results if r is not None]
                 book_data.extend(results)
 
                 if page % batch_size == 0:
-                    print(f'Сохраняем промежуточные данные в файл: страница{page}')
+                    print(f'Сохраняем промежуточные данные в файл: страница {page}')
                     logging(page)
                     save_to_csv(book_data, filename)
                     book_data.clear()
@@ -117,8 +121,4 @@ def get_data_books(url, max_pages, batch_size, filename='annotation_data.csv'):
     
 
 if __name__ == '__main__':
-    data = get_data_books(url, batch_size = 10, max_pages = last_page)
-
-
-
-
+    data = get_data_books(url, batch_size = 10, max_pages = 2262)
