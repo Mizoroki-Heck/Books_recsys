@@ -30,11 +30,11 @@
 
 1. Клонируйте репозиторий:
    ```bash
-   git clone https://github.com/Nikarashi/Books_recsys
+   git clone https://github.com/Nikarashi/Books_recsys.git
    ```
 
 
 ## Контакты
 
-Если у вас есть идеи или предложения, свяжитесь со мной чере[з ](https://github.com/username)[GitHub](https://github.com/username).
+Если у вас есть идеи или предложения, свяжитесь со мной череp [telegram](https://t.me/Nikarashi).
 
