@@ -95,14 +95,14 @@ def parse_book(link):
         'book cover': book_cover
     }
 
-def get_data_books(url, batch_size, filename='books_data'):
+def get_data_books(url, filename='books_data.csv'):
         book_data = []
         current_page = load_progress()
         max_pages = get_last_page(url)
 
         for page in range(1, (max_pages-current_page)+1):
             try:
-                print(f'Парсим страницу {page}...')
+                print(f'✅✅✅Парсим страницу {page}...')
                 book_links = get_url_book(url, page)
                 time.sleep(random.randrange(2, 5))
                 if not book_links:
@@ -115,7 +115,6 @@ def get_data_books(url, batch_size, filename='books_data'):
                 results = [r for r in results if r is not None]
                 book_data.extend(results)
 
-
             except Exception as e:
                 print(f"Ошибка при обработке книги на странице {page}: {e}")
                 print('Продолжаем парсинг')
@@ -123,11 +122,11 @@ def get_data_books(url, batch_size, filename='books_data'):
             
         logging(max_pages)
         if book_data:
-            print(f"Сохраняем оставшиеся данные в файл")
-            save_to_csv(book_data, filename)
+            print(f"✅✅✅Данные собраны, возвращаем DataFrame.")
+            return pd.DataFrame(book_data)
 
 if __name__ == '__main__':
-    data = get_data_books(url, batch_size = 10)
+    data = get_data_books(url)
 
 
 
