@@ -10,7 +10,7 @@
 
     <style>
         body {
-            background: url('https://img.freepik.com/free-photo/creative-arrangement-with-different-books_23-2148851016.jpg?t=st=1738330059~exp=1738333659~hmac=2f3b8f2898dbf59300793b281c675b26065e8a908cc8323773cff246595f3bb2&w=1800');
+            background: url('https://img.freepik.com/free-photo/white-cement-wall_1203-512.jpg?t=st=1738846196~exp=1738849796~hmac=b6a607639156dca791eec44c903fa9baf31a7886b906e84f6f1f064983540617&w=1800');
             font-family: Arial, sans-serif;
             color: #2c3e50;
             background-size: cover;
@@ -105,25 +105,32 @@
             <button type="submit" class="btn btn-primary">Получить рекомендации</button>
         </form>
         {% if books %}
-            <h2 class="mt-5">Рекомендуемые книги</h2>
-            <ul>
-                {% for book, similarity in books %}
-                    <li>{{ data['Title'][book] }} - {{ similarity }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+        <h2 class="mt-5">Рекомендуемые книги</h2>
+        <ul>
+            {% for book, similarity in books %}
+                <li>
+                    <strong>Название:</strong> {{ data['Title'][book] }}<br>
+                    <strong>Автор:</strong> {{ data['Author'][book] }}<br>
+                    <!-- Добавляем отображение обложки -->
+                    <img src="{{ data['book cover'][book] }}" alt="Обложка книги" style="max-width: 200px; height: auto; margin-top: 10px;">
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
 
-        {% if other_books %}
-            <h2 class="mt-5">Другие похожие книги</h2>
-            <ul>
-                {% for book, similarity in other_books %}
-                    <li>{{ data['Title'][book] }} - {{ similarity }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    </div>
+    {% if other_books %}
+    <h2 class="mt-5">Другие похожие книги</h2>
+    <ul>
+        {% for book, similarity in other_books %}
+            <li>
+                <strong>Название:</strong> {{ data['Title'][book] }}<br>
+                <strong>Похожие по рейтингу:</strong> {{ similarity }}<br>
+                <!-- Добавляем отображение обложки -->
+                <img src="{{ data['book cover'][book] }}" alt="Обложка книги" style="max-width: 200px; height: auto; margin-top: 10px;">
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+

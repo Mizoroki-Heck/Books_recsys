@@ -1,0 +1,19 @@
+services:
+  web:
+    build: .
+    command: python /app/web_ap/app.py  # Запуск Flask-приложения
+    ports:
+      - "5000:5000"  # Проброс порта для Flask
+    env_file:
+      - .env  # Загружаем переменные окружения из .env файла
+    volumes:
+      - .:/app  # Монтируем проект в контейнер для удобства разработки
+    restart: always  # Автоматический перезапуск контейнера
+ 
+  cron:
+    build:
+      context: .
+      dockerfile: Dockerfile  # может быть тот же Dockerfile, если cron часть того же контейнера
+    volumes:
+      - .:/app
+    command: ["cron", "-f"]  # запускаем cron

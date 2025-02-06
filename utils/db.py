@@ -6,11 +6,14 @@ from sqlalchemy.ext.declarative import declarative_base
 from dotenv import load_dotenv, find_dotenv
 import os
 
+if not os.getenv("DOCKERIZED"):  
+    load_dotenv(find_dotenv())
 
-load_dotenv(find_dotenv())
+DATABASE_URL = os.getenv("DATABASE_PUBLIC_URL")
+if not DATABASE_URL:
+    raise ValueError("DATABASE_PUBLIC_URL не задан!")
 
-db_host = os.getenv("DATABASE_PUBLIC_URL")
-engine = create_engine(db_host, echo=True)
+engine = create_engine(DATABASE_URL, echo=True)
 
 Base = declarative_base()
 

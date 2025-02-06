@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request
 from sklearn.metrics.pairwise import cosine_similarity
 import os, sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from utils.db import get_data_db 
 import re
+
 
 app = Flask(__name__)
 
@@ -48,4 +49,4 @@ def about():
     return render_template("about.html")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
