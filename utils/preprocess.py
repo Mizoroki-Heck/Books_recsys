@@ -3,13 +3,15 @@ import os
 
 def preprocess_data(data):
     if data is None:
-        raise ValueError("Данные не были загружены корректно. Пожалуйста, проверьте файл CSV.")
+        raise ValueError("Данные не были загружены корректно.")
      
-    data.drop('Unnamed: 0', axis=1, inplace=True)
+    # data.drop('Unnamed: 0', axis=1, inplace=True)
     data = data.drop_duplicates(subset=['Title', 'Author'])
     data['Author'] = data['Author'].fillna('Без автора')
+    data['Author'] = data['Author'].replace('<не указано>', 'Без автора')
     data['Annotation'] = data['Annotation'].fillna('Без аннотации')
     data['series'] = data['series'].fillna('Без серии')
+
 
     mask = data['num of pages'].str.contains('кг', case=False)
     data['num of pages'][mask]
@@ -22,9 +24,4 @@ def preprocess_data(data):
     data['num of pages'] = data['num of pages'].astype('int')
     return data
 
-def clear_df():
-    os.remove('dataset/books_data.csv')
 
-if __name__ == '__main__':
-    data = pd.read_csv(r'dataset\\books_data.csv')
-    cleaned_data = preprocess_data(data)

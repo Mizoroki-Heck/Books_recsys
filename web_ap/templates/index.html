@@ -104,6 +104,23 @@
             </div>
             <button type="submit" class="btn btn-primary">Получить рекомендации</button>
         </form>
+        {% if books %}
+            <h2 class="mt-5">Рекомендуемые книги</h2>
+            <ul>
+                {% for book, similarity in books %}
+                    <li>{{ data['Title'][book] }} - {{ similarity }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if other_books %}
+            <h2 class="mt-5">Другие похожие книги</h2>
+            <ul>
+                {% for book, similarity in other_books %}
+                    <li>{{ data['Title'][book] }} - {{ similarity }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
 
     <!-- Bootstrap JS -->

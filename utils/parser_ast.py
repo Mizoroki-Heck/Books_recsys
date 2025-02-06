@@ -44,14 +44,6 @@ def get_url_book(url, page=1):
         url_books.append('https://ast.ru' + i.get('href'))
     return url_books
 
-def save_to_csv(data, filename='books_data.csv'):
-    os.makedirs('dataset', exist_ok=True)
-    filepath = os.path.join('dataset', filename)
-
-    file_exists = os.path.exists(filepath)
-    df = pd.DataFrame(data)
-    df.to_csv(filepath, mode='a', header=not file_exists, index=False)
-
 def parse_book(link):
     reg = requests.get(link)
     time.sleep(random.randrange(2, 5))
