@@ -15,7 +15,7 @@ data_lsa = get_data_db('SELECT * FROM lsa')
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method=='POST':
-        books_users = request.form['bookTitle']
+        books_users = request.form['bookTitle'].split()
         author_users = request.form['authorName']
         author_split = author_users.split()
 

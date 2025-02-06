@@ -125,7 +125,7 @@
         {% for book, similarity in other_books %}
             <li>
                 <strong>Название:</strong> {{ data['Title'][book] }}<br>
-                <strong>Похожие по рейтингу:</strong> {{ similarity }}<br>
+                <strong>Автор:</strong> {{ data['Author'][book] }}<br>
                 <!-- Добавляем отображение обложки -->
                 <img src="{{ data['book cover'][book] }}" alt="Обложка книги" style="max-width: 200px; height: auto; margin-top: 10px;">
             </li>
